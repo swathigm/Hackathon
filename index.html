@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellbeing Card Connect - Mental Health Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-container">
+            <div class="loader-spinner">
+                <div class="teddy-loader">🧸</div>
+            </div>
+            <div class="loading-text">Loading your wellness journey...</div>
+            <div class="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Screen -->
+    <div class="menu-screen" id="menuScreen">
+        <div class="background-decorations">
+            <div class="float-item float-1">❤️</div>
+            <div class="float-item float-2">💚</div>
+            <div class="float-item float-3">💙</div>
+            <div class="float-item float-4">✨</div>
+            <div class="float-item float-5">🌟</div>
+        </div>
+
+        <div class="menu-content">
+            <h1 class="menu-title">✨ Wellbeing Connect ✨</h1>
+            <p class="menu-subtitle">Mental Health Challenge</p>
+            
+            <div class="quote-box">
+                <p class="quote-text" id="quoteText">💚 Your mental health matters!</p>
+            </div>
+
+            <p class="menu-description">
+                Connect letters to form wellbeing words. 10 seconds per word, earn points, track your best score.
+            </p>
+
+            <button class="play-btn" onclick="startGame()">
+                <span class="btn-emoji">🎮</span> Play <span class="btn-emoji">🚀</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="game-screen" id="gameScreen">
+        <div class="game-header">
+            <div class="header-left">
+                <div class="timer-box">
+                    <span class="timer-label">⏱️ Word Timer</span>
+                    <div class="timer-circle">
+                        <svg class="timer-svg" viewBox="0 0 100 100">
+                            <circle class="timer-circle-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="timer-circle-progress" cx="50" cy="50" r="45" id="timerProgress"></circle>
+                        </svg>
+                        <span class="timer-value" id="wordTimerValue">10</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-center">
+                <div class="target-word-box">
+                    <span class="target-label">Target Word:</span>
+                    <h2 class="target-word" id="targetWord">L O V E</h2>
+                    <span class="word-hint" id="wordHint">💚 Practice self-love</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="scoreboard">
+                    <div class="score-item">
+                        <span class="score-label">Current Score</span>
+                        <div class="score-value" id="currentScore">0</div>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">🏆 Highest Score</span>
+                        <div class="highest-score" id="highestScore">0</div>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Words Solved</span>
+                        <div class="words-solved" id="wordsSolved">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-content">
+            <div class="cards-canvas">
+                <div class="cards-container" id="cardsContainer"></div>
+                <div class="connection-canvas" id="connectionCanvas"></div>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <span id="gameMessage" class="game-message">🎯 Click on letters in order to form the word!</span>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div class="game-over-screen" id="gameOverScreen">
+        <div class="game-over-backdrop">
+            <div class="game-over-content">
+                <div class="game-over-emoji" id="gameOverEmoji">🏆</div>
+                
+                <h1 class="game-over-title">Game Over!</h1>
+                
+                <div class="game-over-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Final Score:</span>
+                        <span class="stat-value" id="finalScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Words Completed:</span>
+                        <span class="stat-value" id="finalWords">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Accuracy:</span>
+                        <span class="stat-value" id="finalAccuracy">0%</span>
+                    </div>
+                </div>
+
+                <p class="motivational-message">
+                    Remember: Mental health is a journey, not a destination. 
+                    Be kind to yourself and celebrate your progress! 💚✨
+                </p>
+
+                <button class="restart-btn" onclick="restartGame()">
+                    <span>🔄</span> Play Again <span>🎮</span>
+                </button>
+                <button class="menu-btn" onclick="backToMenu()">
+                    <span>🏠</span> Back to Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup for Success -->
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popup" id="successPopup">
+        <div class="popup-content">
+            <div class="popup-emoji" id="popupEmoji">🎉</div>
+            <h2 class="popup-title" id="popupTitle">Perfect!</h2>
+            <p class="popup-text" id="popupText">You found the word!</p>
+            <p class="popup-points" id="popupPoints">+100 Points</p>
+            <p class="popup-wellness" id="popupWellness">Wellness Tip: Self-care is important!</p>
+            <button class="popup-close-btn" onclick="closeSuccessPopup()">Continue 💪</button>
+        </div>
+    </div>
+
+    <!-- Popup for Failure -->
+    <div class="popup" id="failurePopup">
+        <div class="popup-content">
+            <div class="popup-emoji" id="failureEmoji">⏱️</div>
+            <h2 class="popup-title">Time's Up!</h2>
+            <p class="popup-text">The word was: <strong id="failedWordShow">LOVE</strong></p>
+            <p class="popup-wellness">Wellness Tip: It's okay to try again. Growth takes time! 💚</p>
+            <button class="popup-close-btn" onclick="closeFailurePopup()">Next Word 🚀</button>
+        </div>
+    </div>
+
+    <script src="javascript.js"></script>
+</body>
+</html>
